@@ -17,7 +17,7 @@ You can join [Slack Group] for discussion.
 ## Quick Start
 Please open the terminal and execute the command below. Make sure you have installed docker-compose in advance.
 ```bash
-git clone https://github.com/singerdmx/BulletJournal.git
+git clone https://github.com/MrFoolsheep/BulletJournal.git
 cd BulletJournal
 chmod +x buildImage.sh
 chmod +x start.sh
@@ -32,5 +32,6 @@ Next, you can look into the `docker-compose.yml` for detailed config parameters.
 
 Open the browser and enter `https://localhost` to see the UI interface.
 Open the browser and enter `http://localhost:8080/swagger-ui.html` to see the API documentation.
+If port 8080 is not available, you could try other ports.
 
 [Slack Group]: https://join.slack.com/t/bulletjournal1024/shared_invite/zt-fys7t9hi-ITVU5PGDen1rNRyCjdcQ2g
