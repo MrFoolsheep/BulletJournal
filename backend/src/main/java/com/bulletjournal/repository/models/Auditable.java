@@ -42,7 +42,7 @@ public class Auditable extends AuditModel {
     }
 
     public Auditable(Long projectId, String activity, String originator, Timestamp activityTime, ContentAction action,
-                     Long projectItemId) {
+    Long projectItemId) {
         this.projectId = projectId;
         this.activity = activity;
         this.originator = originator;

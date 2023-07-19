@@ -13,12 +13,66 @@ import java.util.function.Function;
 @Component
 public class LedgerSummaryCalculator {
 
-    public LedgerSummary getLedgerSummary(
-            LedgerSummaryType ledgerSummaryType,
-            ZonedDateTime startTime, ZonedDateTime endTime, List<Transaction> transactions, FrequencyType frequencyType) {
-        final LedgerSummary ledgerSummary = new LedgerSummary(transactions,
-                ZonedDateTimeHelper.getDate(startTime),
-                ZonedDateTimeHelper.getDate(endTime));
+    public static class LedgerSummaryRequest {
+        private LedgerSummaryType ledgerSummaryType;
+        private ZonedDateTime startTime;
+        private ZonedDateTime endTime;
+        private List<Transaction> transactions;
+        private FrequencyType frequencyType;
+
+        public LedgerSummaryRequest(LedgerSummaryType ledgerSummaryType, ZonedDateTime startTime, ZonedDateTime endTime, List<Transaction> transactions, FrequencyType frequencyType) {
+            this.ledgerSummaryType = ledgerSummaryType;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.transactions = transactions;
+            this.frequencyType = frequencyType;
+        }
+
+        public LedgerSummaryType getLedgerSummaryType() {
+            return ledgerSummaryType;
+        }
+
+        public void setLedgerSummaryType(LedgerSummaryType ledgerSummaryType) {
+            this.ledgerSummaryType = ledgerSummaryType;
+        }
+
+        public ZonedDateTime getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(ZonedDateTime startTime) {
+            this.startTime = startTime;
+        }
+
+        public ZonedDateTime getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(ZonedDateTime endTime) {
+            this.endTime = endTime;
+        }
+
+        public List<Transaction> getTransactions() {
+            return transactions;
+        }
+
+        public void setTransactions(List<Transaction> transactions) {
+            this.transactions = transactions;
+        }
+
+        public FrequencyType getFrequencyType() {
+            return frequencyType;
+        }
+
+        public void setFrequencyType(FrequencyType frequencyType) {
+            this.frequencyType = frequencyType;
+        }
+    }
+
+    public LedgerSummary getLedgerSummary(LedgerSummaryRequest request) {
+        final LedgerSummary ledgerSummary = new LedgerSummary(request.getTransactions(),
+                ZonedDateTimeHelper.getDate(request.getStartTime()),
+                ZonedDateTimeHelper.getDate(request.getEndTime()));
 
         final Total total = new Total();
         Map<String, Transactions> m = new HashMap<>();
@@ -26,12 +80,12 @@ public class LedgerSummaryCalculator {
         Function<? super TransactionsSummary, ? extends String> transactionsSummariesComparator =
                 TransactionsSummary::getName;
 
-        switch (ledgerSummaryType) {
+        switch (request.getLedgerSummaryType()) {
             case DEFAULT:
                 transactionsSummariesComparator = TransactionsSummary::getMetadata;
                 final Function<Transaction, String> name;
                 final Function<Transaction, String> metadata;
-                switch (frequencyType) {
+                switch (request.getFrequencyType()) {
                     case MONTHLY:
                         name = (t) -> t.getReadableYearMonth();
                         metadata = (t) -> t.getYearMonth();
@@ -48,7 +102,7 @@ public class LedgerSummaryCalculator {
                         throw new IllegalArgumentException();
                 }
 
-                processTransaction(transactions, total, (t -> {
+                processTransaction(request.getTransactions(), total, (t -> {
                     double amount = t.getAmount();
                     Transactions tran = m.computeIfAbsent(name.apply(t), k -> new Transactions());
                     tran.setMeta(metadata.apply(t));
@@ -63,7 +117,7 @@ public class LedgerSummaryCalculator {
                 }));
                 break;
             case LABEL:
-                processTransaction(transactions, total, (t -> {
+                processTransaction(request.getTransactions(), total, (t -> {
                     double amount = t.getAmount();
                     for (Label l : t.getLabels()) {
                         Transactions tran = m.computeIfAbsent(l.getValue(), k -> new Transactions());
@@ -79,7 +133,7 @@ public class LedgerSummaryCalculator {
                 }));
                 break;
             case PAYER:
-                processTransaction(transactions, total, (t -> {
+                processTransaction(request.getTransactions(), total, (t -> {
                     Transactions tran = m.computeIfAbsent(t.getPayer().getName(), k -> new Transactions());
                     double amount = t.getAmount();
                     switch (TransactionType.getType(t.getTransactionType())) {
@@ -93,7 +147,7 @@ public class LedgerSummaryCalculator {
                 }));
                 break;
             default:
-                throw new IllegalArgumentException("Invalid LedgerSummaryType " + ledgerSummaryType);
+                throw new IllegalArgumentException("Invalid LedgerSummaryType " + request.getLedgerSummaryType());
         }
 
         ledgerSummary.setIncome(total.totalIncome);
@@ -119,6 +173,7 @@ public class LedgerSummaryCalculator {
         ledgerSummary.setTransactionsSummaries(transactionsSummaries);
         return ledgerSummary;
     }
+
 
     private void processTransaction(List<Transaction> transactions, Total total,
                                     Consumer<Transaction> transactionHandler) {

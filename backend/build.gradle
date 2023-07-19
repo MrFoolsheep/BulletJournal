@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.8'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.openhtmltopdf:openhtmltopdf-java2d:1.0.8'
+    implementation 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.projectlombok:lombok:1.18.26'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'

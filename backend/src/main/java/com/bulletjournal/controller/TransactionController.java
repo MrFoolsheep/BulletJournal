@@ -152,8 +152,14 @@ public class TransactionController {
         HttpHeaders responseHeader = new HttpHeaders();
         responseHeader.setETag(transactionsEtag);
 
-        final LedgerSummary ledgerSummary = this.ledgerSummaryCalculator.getLedgerSummary(ledgerSummaryType,
-                startTime, endTime, transactions, frequencyType);
+        LedgerSummaryCalculator.LedgerSummaryRequest request = new LedgerSummaryCalculator.LedgerSummaryRequest(ledgerSummaryType, startTime, endTime, transactions, frequencyType);
+        request.setLedgerSummaryType(ledgerSummaryType);
+        request.setStartTime(startTime);
+        request.setEndTime(endTime);
+        request.setTransactions(transactions);
+        request.setFrequencyType(frequencyType);
+
+        final LedgerSummary ledgerSummary = this.ledgerSummaryCalculator.getLedgerSummary(request);
 
         return ResponseEntity.ok().headers(responseHeader).body(ledgerSummary);
     }

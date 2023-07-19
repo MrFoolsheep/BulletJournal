@@ -102,51 +102,55 @@ public class Converter {
 
     private static String getBaseText(Event event, Task task) {
         StringBuilder baseText = new StringBuilder("[");
-        if (event.getDescription() != null) {
-            String description = processHtmlTags(event.getDescription());
-            // Split description based on break line,
-            StringBuilder sb = new StringBuilder();
-            for (char c : description.toCharArray()) {
-                if (c == '\n' || c == '\r') {
-                    if (sb.length() > 0) {
-                        baseText.append(String.format(INSERT_STR_FORMAT, sb.toString().replace("\"", "\\\"")));
-                    }
-                    baseText.append(INSERT_LINE_BREAK);
-                    sb.setLength(0);
-                } else {
-                    sb.append(c);
+
+        appendDescription(baseText, event.getDescription());
+
+        appendLocation(baseText, event.getLocation());
+
+        appendAttendees(baseText, event.getAttendees());
+
+        baseText.append("{\"insert\":\"\\n\"}]");
+        return baseText.toString();
+    }
+
+    private static void appendDescription(StringBuilder baseText, String description) {
+        if (description != null) {
+            String processedDescription = processHtmlTags(description);
+            String[] lines = processedDescription.split("[\\r\\n]+");
+
+            for (String line : lines) {
+                if (!line.isEmpty()) {
+                    baseText.append(String.format(INSERT_STR_FORMAT, line.replace("\"", "\\\"")))
+                            .append(INSERT_LINE_BREAK);
                 }
             }
-            if (sb.length() > 0) {
-                baseText.append(String.format(INSERT_STR_FORMAT, sb.toString().replace("\"", "\\\"")));
-                baseText.append(INSERT_LINE_BREAK);
-            }
         }
+    }
 
-        if (event.getLocation() != null) {
-            task.setLocation(event.getLocation());
+    private static void appendLocation(StringBuilder baseText, String location) {
+        if (location != null) {
             baseText.append(INSERT_LINE_BREAK)
                     .append(String.format(INSERT_STR_FORMAT, "Location: "))
-                    .append(String.format(INSERT_STR_FORMAT, event.getLocation()))
+                    .append(String.format(INSERT_STR_FORMAT, location))
                     .append(INSERT_LINE_BREAK);
         }
+    }
 
-        List<EventAttendee> attendeeList = event.getAttendees();
+    private static void appendAttendees(StringBuilder baseText, List<EventAttendee> attendeeList) {
         attendeeList = attendeeList != null ?
                 attendeeList.stream().filter((a) -> StringUtils.isNotBlank(a.getDisplayName()))
                         .collect(Collectors.toList()) : Collections.emptyList();
+
         if (!attendeeList.isEmpty()) {
             baseText.append(INSERT_LINE_BREAK)
                     .append(String.format(INSERT_STR_FORMAT, "Attendees:"))
                     .append(INSERT_LINE_BREAK);
+
             for (EventAttendee attendee : attendeeList) {
                 baseText.append(INSERT_LINE_BREAK)
                         .append(String.format(INSERT_STR_FORMAT, attendee.getDisplayName()));
             }
         }
-
-        baseText.append("{\"insert\":\"\\n\"}").append("]");
-        return baseText.toString();
     }
 
 

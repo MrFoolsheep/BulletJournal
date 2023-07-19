@@ -119,12 +119,12 @@ public class NotificationService {
         this.eventQueue.offer(remindable);
     }
 
-    public void deleteESDocument(RemoveElasticsearchDocumentEvent removeElasticsearchDocumentEvent) {
-        LOGGER.info("Received removeESDocument: " + removeElasticsearchDocumentEvent);
-        if (removeElasticsearchDocumentEvent == null) {
+    public void deleteESDocument(RemoveElasticsearchDocumentEvent removeEvent) {
+        LOGGER.info("Received removeESDocument: " + removeEvent);
+        if (removeEvent == null) {
             return;
         }
-        this.eventQueue.offer(removeElasticsearchDocumentEvent);
+        this.eventQueue.offer(removeEvent);
     }
 
     public void saveCompleteTasks(SaveCompleteTasksEvent saveCompleteTasksEvent) {

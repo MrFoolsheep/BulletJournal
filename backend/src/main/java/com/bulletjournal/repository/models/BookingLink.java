@@ -7,109 +7,73 @@ import com.bulletjournal.util.BookingUtil;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import javax.annotation.sql.DataSourceDefinition;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "booking_links")
 public class BookingLink extends AuditModel {
 
-    @Id
-    private String id;
+        @Id
+        private String id;
 
-    @NotBlank
-    @Size(min = 2, max = 100)
-    @Column(length = 100, nullable = false, updatable = false)
-    private String owner;
+        @NotBlank
+        @Size(min = 2, max = 100)
+        @Column(length = 100, nullable = false, updatable = false)
+        private String owner;
 
-    @Column(name = "start_date")
-    private String startDate;
+        @Column(name = "start_date")
+        private String startDate;
 
-    @Column(name = "end_date")
-    private String endDate;
+        @Column(name = "end_date")
+        private String endDate;
 
-    @Column
-    private String slots;
+        @Column
+        private String slots;
 
-    @Column
-    private String recurrences;
+        @Column
+        private String recurrences;
 
-    @Column
-    private String timezone;
+        @Column
+        private String timezone;
 
-    @Column
-    private String location;
+        @Column
+        private String location;
 
-    @Column
-    private String note;
+        @Column
+        private String note;
 
-    @Column
-    private boolean removed;
+        @Column
+        private boolean removed;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "project_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Project project;
+        @ManyToOne(fetch = FetchType.EAGER, optional = false)
+        @JoinColumn(name = "project_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        private Project project;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingLink")
-    private List<Booking> bookings;
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "bookingLink")
+        private List<Booking> bookings;
 
-    @Column(name = "slot_span")
-    private int slotSpan;
+        @Column(name = "slot_span")
+        private int slotSpan;
 
-    @Column(name = "include_task_without_duration")
-    private boolean includeTaskWithoutDuration;
+        @Column(name = "include_task_without_duration")
+        private boolean includeTaskWithoutDuration;
 
-    @Column(name = "expire_on_booking")
-    private boolean expireOnBooking;
+        @Column(name = "expire_on_booking")
+        private boolean expireOnBooking;
 
-    @Column(name = "before_event_buffer")
-    private int beforeEventBuffer;
+        @Column(name = "before_event_buffer")
+        private int beforeEventBuffer;
 
-    @Column(name = "after_event_buffer")
-    private int afterEventBuffer;
+        @Column(name = "after_event_buffer")
+        private int afterEventBuffer;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getTimezone() {
-        return timezone;
-    }
-
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
 
     public int getSlotSpan() {
         return slotSpan;
@@ -173,38 +137,6 @@ public class BookingLink extends AuditModel {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public boolean isRemoved() {
-        return removed;
-    }
-
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
-    }
-
-    public List<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
-    }
-
-    public String getRecurrences() {
-        return recurrences;
-    }
-
-    public void setRecurrences(String recurrences) {
-        this.recurrences = recurrences;
     }
 
     public com.bulletjournal.controller.models.BookingLink toPresentationModel() {
