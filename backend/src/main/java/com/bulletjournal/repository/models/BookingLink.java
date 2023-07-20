@@ -12,9 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "booking_links")
 public class BookingLink extends AuditModel {
@@ -74,6 +72,69 @@ public class BookingLink extends AuditModel {
         @Column(name = "after_event_buffer")
         private int afterEventBuffer;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getRecurrences() {
+        return recurrences;
+    }
+
+    public void setRecurrences(String recurrences) {
+        this.recurrences = recurrences;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
 
     public int getSlotSpan() {
         return slotSpan;
@@ -137,6 +198,14 @@ public class BookingLink extends AuditModel {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
     }
 
     public com.bulletjournal.controller.models.BookingLink toPresentationModel() {

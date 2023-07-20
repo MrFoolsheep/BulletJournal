@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
  */
 @ActiveProfiles("test")
 public class ProjectItemsGrouperTest {
+
     @Autowired
     private AuthorizationService authorizationService;
 
